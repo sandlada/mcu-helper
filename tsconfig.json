@@ -1,36 +1,26 @@
 {
-  "compilerOptions": {
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "declaration": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmitOnError": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noEmit": true,
-    "pretty": true,
-    "sourceMap": true,
-    "strict": true,
-    "outDir": "build",
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "moduleResolution": "bundler",
-    "importHelpers": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "verbatimModuleSyntax": true,
-    "target": "ES2022",
-    "module": "ES2022",
-    "lib": [
-      "ES2022",
-      "DOM"
-    ],
-    "baseUrl": ".",
-  },
-  "include": [
-    "src/**/*.ts",
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+    "compilerOptions": {
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        "declaration": true,
+        "forceConsistentCasingInFileNames": true,
+        "noEmitOnError": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "pretty": true,
+        "strict": true,
+        "outDir": "build",
+        "skipLibCheck": true,
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "bundler",
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "verbatimModuleSyntax": true,
+        "target": "ESNext",
+        "module": "ESNext",
+        "lib": ["ESNext", "DOM"],
+        "rootDir": "./src"
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules", "src/**/*.test.ts", "src/**/*.spec.ts"]
 }

@@ -7,6 +7,6 @@ Security updates are only applied to the latest published version.
 ## Reporting a Vulnerability
 
 Report vulnerabilities in a private
-[GitHub security advisory](https://github.com/sandlada/material-token-generator/security/advisories).
+[GitHub security advisory](https://github.com/sandlada/mcu-helper/security/advisories).
 
 **Please do not disclose security vulnerabilities in public issues.**

@@ -1,13 +1,16 @@
-export type TMaterialVariant = (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)
+import { Variant } from '@material/material-color-utilities'
 
 export const MaterialVariant = {
-  Monochrome: 0,
-  Neutral: 1,
-  TonalSpot: 2,
-  Vibrant: 3,
-  Expressive: 4,
-  Fidelity: 5,
-  Content: 6,
-  Rainbow: 7,
-  FruitSalad: 8,
-} as const
+    Monochrome: Variant.MONOCHROME,
+    Neutral   : Variant.NEUTRAL,
+    TonalSpot : Variant.TONAL_SPOT,
+    Vibrant   : Variant.VIBRANT,
+    Expressive: Variant.EXPRESSIVE,
+    Fidelity  : Variant.FIDELITY,
+    Content   : Variant.CONTENT,
+    Rainbow   : Variant.RAINBOW,
+    FruitSalad: Variant.FRUIT_SALAD,
+} as const satisfies Record<string, Variant>
+
+export type MaterialVariant = typeof MaterialVariant[keyof typeof MaterialVariant]
+export type TMaterialVariant = MaterialVariant
