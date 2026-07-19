@@ -1,6 +1,6 @@
 {
     "name": "@sandlada/mcu-helper",
-    "version": "1.0.0-nightly.20260711.a",
+    "version": "0.0.1-20260719.a",
     "author": "Kai-Orion & Sandlada",
     "license": "MIT",
     "type": "module",
