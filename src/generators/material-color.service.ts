@@ -1,4 +1,4 @@
-import { DynamicScheme, Variant, type Hct, type Platform, type TonalPalette } from "@material/material-color-utilities"
+import { DynamicScheme, Variant, Hct, type Platform, type TonalPalette } from "@material/material-color-utilities"
 import type { MaterialContrastLevel } from "../material/material-contrast-level"
 import type { MaterialVariant } from "../material/material-variant"
 import { StringUtil } from "../utils/string-util"
@@ -113,8 +113,9 @@ export class MaterialColor {
         palettes   ?: Partial<Record<SchemePaletteName, TonalPalette>>
         whiteList  ?: MaterialColorKebabCaseName[]
         blackList  ?: MaterialColorKebabCaseName[]
+        oled       ?: boolean
     }): Theme {
-        const { blackList, contrast = 1, palettes = {}, platform = "phone", sourceColor, specVersion = "2025", variant = Variant.TONAL_SPOT, whiteList } = args
+        const { blackList, contrast = 1, palettes = {}, platform = "phone", sourceColor, specVersion = "2025", variant = Variant.TONAL_SPOT, whiteList, oled = false } = args
         const normalizedWhiteList = this.normalizeNames(whiteList)
         const normalizedBlackList = this.normalizeNames(blackList)
 
@@ -123,26 +124,44 @@ export class MaterialColor {
         const lightScheme = this.createTemplateLightScheme(sourceColor, contrast, variant, platform, specVersion, palettes)
         const darkScheme = this.createTemplateDarkScheme(sourceColor, contrast, variant, platform, specVersion, palettes)
 
-        const toCustomizedMaterialDynamicColors = (scheme: DynamicScheme): CustomizedColor[] => [
-            ...scheme.colors.allColors,
-            // allColors missed these tokens
-            scheme.colors.scrim(),
-            scheme.colors.shadow(),
-            scheme.colors.surfaceTint(),
-            scheme.colors.surfaceVariant(),
-            scheme.colors.primaryPaletteKeyColor(),
-            scheme.colors.secondaryPaletteKeyColor(),
-            scheme.colors.tertiaryPaletteKeyColor(),
-            scheme.colors.errorPaletteKeyColor(),
-            scheme.colors.neutralPaletteKeyColor(),
-            scheme.colors.neutralVariantPaletteKeyColor(),
-        ].map((color) => ({
-            name          : color.name,
-            snakeCaseName : StringUtil.ToSnakeCase(color.name),
-            kebabCasedName: StringUtil.ToKebabCase(color.name),
-            hct           : color.getHct(scheme),
-            palette       : color.palette(scheme),
-        })).sort((a, b) => a.name.localeCompare(b.name));
+        const toCustomizedMaterialDynamicColors = (scheme: DynamicScheme, isDark: boolean): CustomizedColor[] => {
+            let colors = [
+                ...scheme.colors.allColors,
+                // allColors missed these tokens
+                scheme.colors.scrim(),
+                scheme.colors.shadow(),
+                scheme.colors.surfaceTint(),
+                scheme.colors.surfaceVariant(),
+                scheme.colors.primaryPaletteKeyColor(),
+                scheme.colors.secondaryPaletteKeyColor(),
+                scheme.colors.tertiaryPaletteKeyColor(),
+                scheme.colors.errorPaletteKeyColor(),
+                scheme.colors.neutralPaletteKeyColor(),
+                scheme.colors.neutralVariantPaletteKeyColor(),
+            ].map((color) => ({
+                name          : color.name,
+                snakeCaseName : StringUtil.ToSnakeCase(color.name),
+                kebabCasedName: StringUtil.ToKebabCase(color.name),
+                hct           : color.getHct(scheme),
+                palette       : color.palette(scheme),
+            })).sort((a, b) => a.name.localeCompare(b.name));
+
+            if (isDark && oled) {
+                const blackHct = Hct.fromInt(0xff000000);
+                const whiteHct = Hct.fromInt(0xffffffff);
+                colors = colors.map(c => {
+                    if (c.kebabCasedName === 'surface' || c.kebabCasedName === 'background') {
+                        return { ...c, hct: blackHct };
+                    }
+                    if (c.kebabCasedName === 'on-surface' || c.kebabCasedName === 'on-background') {
+                        return { ...c, hct: whiteHct };
+                    }
+                    return c;
+                });
+            }
+
+            return colors;
+        };
 
         const toCustomizedMaterialTonalPalette = (name: string, palette: TonalPalette): CustomizedTonalPalette => ({
             name          : name,
@@ -156,8 +175,8 @@ export class MaterialColor {
         })
 
         const theme: Theme = {
-            light   : toCustomizedMaterialDynamicColors(lightScheme),
-            dark    : toCustomizedMaterialDynamicColors(darkScheme),
+            light   : toCustomizedMaterialDynamicColors(lightScheme, false),
+            dark    : toCustomizedMaterialDynamicColors(darkScheme, true),
             palettes: {
                 primaryPalette       : toCustomizedMaterialTonalPalette("primaryPalette", lightScheme.primaryPalette),
                 secondaryPalette     : toCustomizedMaterialTonalPalette("secondaryPalette", lightScheme.secondaryPalette),

@@ -138,4 +138,23 @@ describe('MaterialColor', () => {
         expect(lightKeys).toEqual(ALL_KEBAB_NAMES)
         expect(darkKeys).toEqual(ALL_KEBAB_NAMES)
     })
+
+    it('applies OLED overrides for dark theme when oled: true', () => {
+        const theme = MaterialColor.Create({
+            sourceColor,
+            ...SPEC_DEFAULTS,
+            palettes: {},
+            oled: true,
+        })
+
+        // Dark theme overrides
+        expect(theme.darkObject['background']).toBe(0xff000000)
+        expect(theme.darkObject['surface']).toBe(0xff000000)
+        expect(theme.darkObject['on-background']).toBe(0xffffffff)
+        expect(theme.darkObject['on-surface']).toBe(0xffffffff)
+
+        // Light theme should remain unaffected
+        expect(theme.lightObject['background']).not.toBe(0xff000000)
+        expect(theme.lightObject['surface']).not.toBe(0xff000000)
+    })
 })
